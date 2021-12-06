@@ -16,7 +16,9 @@ struct Line
 
 std::ostream &operator<<(std::ostream &os, Line l)
 {
-    os << "(" << l.x1 << ", " << l.y1 << ")" << " to " << "(" << l.x2 << ", " << l.y2 << ")";
+    os << "(" << l.x1 << ", " << l.y1 << ")"
+       << " to "
+       << "(" << l.x2 << ", " << l.y2 << ")";
     return os;
 }
 
@@ -57,12 +59,12 @@ void parse_input(std::vector<Line> &vec)
     }
 }
 
-std::tuple<int, int> get_size(std::vector<Line>& lines)
+std::tuple<int, int> get_size(std::vector<Line> &lines)
 {
     int width{std::numeric_limits<int>::min()};
     int height{std::numeric_limits<int>::min()};
 
-    for (auto& l: lines)
+    for (auto &l : lines)
     {
         if (width < l.x1 || width < l.x2)
         {
@@ -74,12 +76,101 @@ std::tuple<int, int> get_size(std::vector<Line>& lines)
         }
     }
 
-    return std::make_tuple(width, height);
+    return std::make_tuple(width+1, height+1);
 }
+
+struct Grid
+{
+    Grid(int w, int h) : w{w}, h{h}
+    {
+
+        for (int i{0}; i < w; ++i)
+        {
+            grid.push_back(std::vector<int>(h, 0));
+        }
+    }
+
+    void print()
+    {
+        for (auto& row: grid)
+        {
+            for (auto& col : row)
+            {
+                std::cout << col;
+            }
+            std::cout << "\n";
+        }
+    }
+
+    int count_bombs()
+    {
+        int sum{0};
+        for (auto& row: grid)
+        {
+            for (auto& col : row)
+            {
+                sum += col >= 2 ? 1 : 0;
+            }
+            
+        }
+        return sum;
+    }
+
+    std::vector<std::vector<int>> grid;
+    int w;
+    int h;
+};
+
+void visit(Grid& grid, int x, int y)
+{
+    grid.grid[x][y]++;
+}
+
+int walk(Line& line, Grid& grid)
+{
+    int x1 = line.x1;
+    int x2 = line.x2;
+    int y1 = line.y1;
+    int y2 = line.y2;
+    int max;
+    int min;
+
+    if (x1 != x2 && y1 != y2)
+        return 0;
+    if (x1 == x2 && y1 == y2)
+        visit(grid, x1, y2);
+
+    bool walk_x = false;
+    if (y1 == y2)
+    {
+        walk_x = true;
+        min = std::min(x1,x2);
+        max = std::max(x1,x2);
+    }
+    else 
+    {
+        walk_x = false;
+        min = std::min(y1,y2);
+        max = std::max(y1,y2);
+    }
+    for (int i{0}; i <= max - min; ++i)
+    {
+        if (walk_x)
+        {
+            visit(grid, min + i, y1);
+        }
+        else
+        {
+            visit(grid, x1, min + i);
+        }
+    }
+}
+
+
 
 int main()
 {
-    std::vector<std::vector<int>> grid;
+
     std::vector<Line> lines;
 
     parse_input(lines);
@@ -89,13 +180,13 @@ int main()
 
     std::tie(width, height) = get_size(lines);
 
-    for (auto &l : lines)
+    Grid grid(width, height);
+
+    for (auto& l : lines)
     {
-        std::cout << l << std::endl;
+        walk(l, grid);
     }
 
-    std::cout << "w h"<< std::endl;
-    std::cout << width << " " << height << std::endl;
-
+    std::cout << "bombs: " << grid.count_bombs() << std::endl;
     return 0;
 }
