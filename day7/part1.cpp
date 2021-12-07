@@ -25,11 +25,6 @@ void print(std::vector<int> &v)
     std::cout << "\n";
 }
 
-int get_dist(int x)
-{
-    return x * (x + 1) / 2;
-}
-
 int main()
 {
     std::string input;
@@ -50,7 +45,7 @@ int main()
 
         for (auto &num : v)
         {
-            current_sum += get_dist(abs(i - num));
+            current_sum += abs(i - num);
         }
 
         shortest = current_sum < shortest ? current_sum : shortest;
