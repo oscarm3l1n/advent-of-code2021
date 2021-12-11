@@ -1,0 +1,34 @@
+Vi vet att den enda digit med length=2
+är en etta, så därför är dom bokstäverna
+kopplade till
+'cf'
+
+Sen kan vi hitta 6an som är den enda
+med length=6 och den har 'f' men inte
+'c'
+
+Så då kan vi avgöra vilken som är
+'c' och vilken som är 'f'
+
+Nu vet vi 'c' och 'f'
+
+sen kan vi hitta 7:an som är length=3
+och bokstaven som inte finns i 'cf'
+är kopplad till 'a'
+
+Sen kan vi kolla 4:an som är length=4
+för att hitta 'bd' men nu vet vi inte ordningen
+
+så då måste vi kolla på 0:an som är length=6
+och har 'b' || 'd' men inte båda två
+och den som är i 6:an är 'b' och den som inte
+är i 6:an är 'd'
+
+Nu saknar vi bara 'eg'
+
+Först kan vi kolla igenom alla bokstäver
+a->g och ta ut dom som vi inte känner till
+(borde vara 2st)
+
+då kan vi kolla på 9:an som har 'e' men
+inte 'g'
